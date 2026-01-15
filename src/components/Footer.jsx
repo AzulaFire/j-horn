@@ -43,10 +43,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href='/contact'
+                  href='/japanese'
                   className='hover:text-foreground transition'
                 >
-                  Contact
+                  日本語
                 </Link>
               </li>
             </ul>
@@ -57,21 +57,21 @@ export default function Footer() {
             <h4 className='text-sm font-semibold'>Connect</h4>
             <div className='mt-3 flex items-center gap-4 text-muted-foreground'>
               <Link
-                href='https://www.github.com/stacksc/goat'
+                href='https://github.com/AzulaFire'
                 aria-label='GitHub'
                 className='hover:text-foreground transition'
               >
                 <Github className='h-5 w-5' />
               </Link>
               <Link
-                href='https://www.linkedin.com/in/stackattack'
+                href='https://www.linkedin.com/in/johnhornjr/'
                 aria-label='LinkedIn'
                 className='hover:text-foreground transition'
               >
                 <Linkedin className='h-5 w-5' />
               </Link>
               <Link
-                href='mailto:centerupt@gmail.com'
+                href='mailto:jhornjr@gmail.com'
                 aria-label='Email'
                 className='hover:text-foreground transition'
               >

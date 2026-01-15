@@ -1,22 +1,41 @@
+'use client'; // Required for Framer Motion
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'motion/react';
+import {
+  Mail,
+  MapPin,
+  Linkedin,
+  Github,
+  ExternalLink,
+  Code2,
+  Palette,
+  Cpu,
+  Database,
+  Briefcase,
+  GraduationCap,
+} from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-
 import { jobs } from '@/data/siteData';
 
-export const metadata = {
-  title: 'Profile | John Horn Jr.',
-  description:
-    'Professional profile of John Horn Jr., a frontend-focused developer with strengths in UI/UX, automation, and modern web development.',
+// Animation Variants
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 },
+};
+
+const staggerContainer = {
+  animate: { transition: { staggerChildren: 0.1 } },
 };
 
 function formatYM(ym) {
   if (!ym) return '';
   const [y, m] = ym.split('-').map(Number);
-  if (!y || !m) return ym;
-
   const monthNames = [
     'Jan',
     'Feb',
@@ -37,229 +56,211 @@ function formatYM(ym) {
 function formatDates(startDate, endDate) {
   const start = formatYM(startDate);
   const end = endDate ? formatYM(endDate) : 'Present';
-  if (!start && !end) return '';
-  if (start && end) return `${start} – ${end}`;
-  return start || end;
+  return start && end ? `${start} – ${end}` : start || end;
 }
 
 export default function ProfilePage() {
-  const sortedJobs = [...jobs].sort((a, b) => {
-    const aKey = a.startDate || '';
-    const bKey = b.startDate || '';
-    return bKey.localeCompare(aKey); // newest first
-  });
+  const sortedJobs = [...jobs].sort((a, b) =>
+    (b.startDate || '').localeCompare(a.startDate || '')
+  );
 
   return (
-    <main className='min-h-screen bg-background'>
-      <section className='mx-auto max-w-7xl px-6 py-20'>
-        {/* Header */}
-        <header className='mb-12 flex flex-col items-center text-center'>
-          <div className='relative mb-6 h-36 w-36 overflow-hidden rounded-full shadow-lg'>
-            <Image
-              src='/images/john.png'
-              alt='John Horn Jr.'
-              fill
-              className='object-cover'
-              priority
-            />
+    <main className='min-h-screen bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-50 via-background to-background dark:from-slate-900'>
+      <motion.section
+        initial='initial'
+        animate='animate'
+        variants={staggerContainer}
+        className='mx-auto max-w-6xl px-6 py-16 lg:py-24'
+      >
+        {/* --- HEADER SECTION --- */}
+        <motion.header
+          variants={fadeIn}
+          className='mb-16 flex flex-col items-center text-center'
+        >
+          <div className='group relative mb-8 h-40 w-40'>
+            <div className='absolute -inset-1 rounded-full bg-linear-to-r from-blue-600 to-cyan-500 opacity-25 blur transition duration-1000 group-hover:opacity-50' />
+            <div className='relative h-40 w-40 overflow-hidden rounded-full border-4 border-background shadow-2xl'>
+              <Image
+                src='/images/john.png'
+                alt='John Horn Jr.'
+                fill
+                className='object-cover transition-transform duration-500 group-hover:scale-110'
+                priority
+              />
+            </div>
           </div>
 
-          <h1 className='text-3xl font-semibold tracking-tight sm:text-4xl'>
+          <h1 className='bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl'>
             John Horn Jr.
           </h1>
 
-          <p className='mt-3 max-w-3xl text-muted-foreground'>
-            Frontend Developer · UI/UX + Visual Design · Automation (Python /
-            VBA) · Web + Desktop + Mobile (Flutter)
+          <p className='mt-4 text-xl font-medium text-blue-600 dark:text-blue-400'>
+            Frontend Developer & UI/UX Specialist
           </p>
 
-          <p className='mt-2 text-sm text-muted-foreground'>
-            Sapporo, Japan (Remote-friendly)
-          </p>
+          <div className='mt-6 flex flex-wrap justify-center gap-4 text-muted-foreground'>
+            <span className='flex items-center gap-1.5'>
+              <MapPin className='h-4 w-4' /> Sapporo, Japan
+            </span>
+            <span className='flex items-center gap-1.5'>
+              <Briefcase className='h-4 w-4' /> Remote Friendly
+            </span>
+          </div>
 
-          <div className='mt-4 flex flex-wrap justify-center gap-2'>
+          <div className='mt-8 flex gap-3'>
             <Link
-              href='https://www.linkedin.com/in/johnhornjr/?originalSubdomain=jp'
+              href='https://www.linkedin.com/in/johnhornjr/'
               target='_blank'
             >
-              <Badge variant='secondary'>LinkedIn</Badge>
+              <Badge className='px-4 py-1.5 text-sm gap-2' variant='default'>
+                <Linkedin className='h-4 w-4' /> LinkedIn
+              </Badge>
             </Link>
-
-            {/* Optional: add GitHub if/when you want */}
-            {/* <Link href="https://github.com/YOUR_GITHUB" target="_blank">
-              <Badge variant="secondary">GitHub</Badge>
-            </Link> */}
-          </div>
-        </header>
-
-        {/* Contact Info */}
-        <Card className='mb-10'>
-          <CardHeader>
-            <CardTitle>Contact</CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-2 text-muted-foreground'>
-            <p>
-              Based in Sapporo, Japan · Available for contract and remote roles
-            </p>
-
-            {/* ✅ Put your real email here if you want it public */}
-            {/* <p>
-              Email:{' '}
-              <a
-                href="mailto:you@example.com"
-                className="font-medium text-primary underline underline-offset-4"
+            {/* Toggle this when ready */}
+            <Link
+              href='mailto:jhornjr@gmail.com'
+              aria-label='Email'
+              className='hover:text-foreground transition'
+            >
+              <Badge
+                className='px-4 py-1.5 text-sm gap-2 cursor-pointer'
+                variant='secondary'
               >
-                you@example.com
-              </a>
-            </p> */}
-          </CardContent>
-        </Card>
+                <Mail className='h-4 w-4' /> Contact Me
+              </Badge>
+            </Link>
+          </div>
+        </motion.header>
 
-        {/* Summary */}
-        <Card className='mb-10'>
-          <CardHeader>
-            <CardTitle>Summary</CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-4 text-muted-foreground leading-relaxed'>
-            <p>
-              I’m a frontend-focused developer specializing in
-              <strong> modern web interfaces</strong>,{' '}
-              <strong>UI/UX design</strong>, and
-              <strong> practical automation</strong>. I build clean, intuitive
-              experiences backed by reliable, maintainable code.
-            </p>
+        <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
+          {/* --- LEFT COLUMN: EXPERIENCE --- */}
+          <div className='lg:col-span-2 space-y-8'>
+            <motion.div variants={fadeIn}>
+              <h2 className='mb-6 flex items-center gap-2 text-2xl font-bold'>
+                <Briefcase className='h-6 w-6 text-blue-500' /> Work Experience
+              </h2>
+              <div className='space-y-6'>
+                {sortedJobs.map((job, idx) => (
+                  <ExperienceCard key={idx} job={job} />
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
-            <p>
-              My background spans <strong>web</strong>, <strong>desktop</strong>
-              , and
-              <strong> mobile</strong> projects—working with frameworks like
-              React, Next.js, Vue, and Angular, and supporting systems with APIs
-              and SQL when needed.
-            </p>
+          {/* --- RIGHT COLUMN: SKILLS & SUMMARY --- */}
+          <aside className='space-y-8'>
+            <motion.div variants={fadeIn}>
+              <Card className='border-none bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur'>
+                <CardHeader>
+                  <CardTitle className='text-lg'>
+                    Professional Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className='text-sm leading-relaxed text-muted-foreground'>
+                  I build clean, intuitive experiences backed by reliable code.
+                  My background spans
+                  <strong> web, desktop, and mobile</strong>, with a heavy focus
+                  on UI polish and practical automation to save teams time.
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <p>
-              I also build workflow-saving tools using Python (including
-              Selenium) and VBA, and I bring a strong visual foundation from
-              design, Photoshop, and photography.
-            </p>
-          </CardContent>
-        </Card>
+            <motion.div variants={fadeIn}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <Cpu className='h-5 w-5 text-blue-500' /> Core Tech
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className='flex flex-wrap gap-2'>
+                  {[
+                    'Next.js',
+                    'React',
+                    'Vue',
+                    'TailwindCSS',
+                    'Python',
+                    'C#',
+                    'SQL',
+                  ].map((s) => (
+                    <Badge key={s} variant='outline' className='bg-background'>
+                      {s}
+                    </Badge>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
 
-        {/* Experience */}
-        <Card className='mb-10'>
-          <CardHeader>
-            <CardTitle>Experience</CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-8'>
-            {sortedJobs.map((job) => (
-              <Experience
-                key={`${job.title}-${job.startDate}-${job.endDate}`}
-                company={job.title}
-                title={`${job.employmentType || 'Role'} · ${
-                  job.location || ''
-                }`.trim()}
-                dates={formatDates(job.startDate, job.endDate)}
-                points={job.responsibilities || []}
-                tech={job.technologies || []}
-              />
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Skills */}
-        <div className='grid gap-8 md:grid-cols-2'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Focus Areas</CardTitle>
-            </CardHeader>
-            <CardContent className='text-muted-foreground space-y-2'>
-              <p>Frontend Engineering (React / Next.js / Vue / Angular)</p>
-              <p>UI/UX + Visual Design (Figma, Photoshop, photography)</p>
-              <p>Automation & Tooling (Python, Selenium, VBA)</p>
-              <p>Desktop + Web Apps (.NET / VB.NET / C#)</p>
-              <p>APIs + SQL (practical backend support)</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Top Skills</CardTitle>
-            </CardHeader>
-            <CardContent className='flex flex-wrap gap-2'>
-              {[
-                'Next.js',
-                'React',
-                'Vue',
-                'Angular',
-                'TailwindCSS',
-                'UI/UX',
-                'Python',
-                'Automation',
-                'VBA',
-                'C# / VB.NET',
-                'SQL',
-              ].map((skill) => (
-                <Badge key={skill} variant='secondary'>
-                  {skill}
-                </Badge>
-              ))}
-            </CardContent>
-          </Card>
+            <motion.div variants={fadeIn}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <Palette className='h-5 w-5 text-purple-500' /> Design &
+                    Tools
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className='space-y-3 text-sm text-muted-foreground'>
+                  <div className='flex items-center justify-between'>
+                    <span>UI/UX Design</span>
+                    <span className='font-mono text-xs text-blue-500'>
+                      Figma
+                    </span>
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <span>Automation</span>
+                    <span className='font-mono text-xs text-blue-500'>
+                      Selenium
+                    </span>
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <span>Cloud</span>
+                    <span className='font-mono text-xs text-blue-500'>AWS</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </aside>
         </div>
-
-        {/* Optional: Certifications/Awards */}
-        <Card className='mt-10'>
-          <CardHeader>
-            <CardTitle>Highlights</CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-3 text-muted-foreground'>
-            <p>
-              Frontend-heavy delivery across enterprise systems and migrations
-            </p>
-            <Separator />
-            <p>
-              Automation tooling to reduce manual work and improve QA
-              consistency
-            </p>
-            <Separator />
-            <p>
-              Design-first approach with strong UI polish and usability focus
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+      </motion.section>
     </main>
   );
 }
 
-/* --------------------------------
-   Helper Component
---------------------------------- */
-
-function Experience({ company, title, dates, points, tech }) {
+function ExperienceCard({ job }) {
   return (
-    <div>
-      <h3 className='text-lg font-semibold text-foreground'>{company}</h3>
-      <p className='text-sm text-muted-foreground'>
-        {title}
-        {dates ? ` · ${dates}` : ''}
-      </p>
-
-      {tech?.length ? (
-        <div className='mt-3 flex flex-wrap gap-2'>
-          {tech.slice(0, 10).map((t) => (
-            <Badge key={t} variant='secondary'>
+    <Card className='group relative overflow-hidden transition-all hover:shadow-md'>
+      <div className='absolute left-0 top-0 h-full w-1 bg-blue-500 opacity-0 transition-opacity group-hover:opacity-100' />
+      <CardHeader className='pb-2'>
+        <div className='flex flex-col justify-between gap-1 sm:flex-row sm:items-center'>
+          <CardTitle className='text-xl font-bold'>{job.title}</CardTitle>
+          <span className='text-xs font-semibold uppercase tracking-wider text-blue-500'>
+            {formatDates(job.startDate, job.endDate)}
+          </span>
+        </div>
+        <p className='text-sm font-medium text-muted-foreground'>
+          {job.employmentType} · {job.location}
+        </p>
+      </CardHeader>
+      <CardContent>
+        <div className='mb-4 flex flex-wrap gap-1.5'>
+          {job.technologies?.map((t) => (
+            <Badge
+              key={t}
+              variant='secondary'
+              className='text-[10px] uppercase font-bold tracking-tight'
+            >
               {t}
             </Badge>
           ))}
         </div>
-      ) : null}
-
-      <ul className='mt-3 list-disc space-y-2 pl-5 text-muted-foreground'>
-        {points.map((p) => (
-          <li key={p}>{p}</li>
-        ))}
-      </ul>
-    </div>
+        <ul className='space-y-2 text-sm text-muted-foreground'>
+          {job.responsibilities?.slice(0, 5).map((p, i) => (
+            <li key={i} className='flex gap-2'>
+              <span className='mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-300' />
+              {p}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }

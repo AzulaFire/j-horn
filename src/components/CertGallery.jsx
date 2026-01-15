@@ -1,19 +1,14 @@
 import Image from 'next/image';
-import { useState } from 'react';
-import CertLightbox from './CertLightbox';
 
 export default function CertGallery({ certs }) {
-  const [active, setActive] = useState(null);
-
   return (
     <>
       <div className='relative overflow-hidden'>
-        <div className='flex gap-6 animate-marquee'>
+        <div className='flex gap-4 animate-marquee'>
           {[...certs, ...certs].map((cert, i) => (
-            <button
+            <div
               key={i}
-              onClick={() => setActive(cert)}
-              className='min-w-55 rounded-lg border border-border bg-card p-4 hover:scale-105 transition'
+              className='min-w-55 rounded-lg border border-border bg-card p-4 transition hover:scale-105'
             >
               <Image
                 src={cert.src}
@@ -22,12 +17,10 @@ export default function CertGallery({ certs }) {
                 height={240}
                 className='object-contain'
               />
-            </button>
+            </div>
           ))}
         </div>
       </div>
-
-      {active && <CertLightbox cert={active} onClose={() => setActive(null)} />}
     </>
   );
 }

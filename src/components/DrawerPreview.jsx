@@ -1,5 +1,7 @@
 // DrawerPreview.jsx
-import { useState, useEffect } from 'react'; // Keep hooks
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -16,12 +18,56 @@ import {
 import ProgressBadge from './ProgressBadge';
 import { FaCircleArrowRight } from 'react-icons/fa6';
 
+// ✅ Simple Icons (react-icons/si)
+import {
+  SiNodedotjs,
+  SiReact,
+  SiNextdotjs,
+  SiJavascript,
+  SiTypescript,
+  SiHtml5,
+  SiCss3,
+  SiPython,
+} from 'react-icons/si';
+
 // Correct aspect ratio for 320x240 (4:3)
 const IMAGE_ASPECT_RATIO_CLASS = 'aspect-[1/0.75]';
-
 const IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
 
-// Helper function that is *not* time-sensitive
+// ✅ Map string keys -> icon components
+const ICON_MAP = {
+  node: SiNodedotjs,
+  react: SiReact,
+  nextjs: SiNextdotjs,
+  javascript: SiJavascript,
+  typescript: SiTypescript,
+  html: SiHtml5,
+  css: SiCss3,
+  python: SiPython,
+};
+
+// ✅ Optional polish: brand-ish colors per tech (Tailwind classes)
+const ICON_COLORS = {
+  react: 'text-sky-500',
+  node: 'text-green-600',
+  nextjs: 'text-black dark:text-white',
+  javascript: 'text-yellow-500',
+  typescript: 'text-sky-600',
+  html: 'text-orange-500',
+  css: 'text-blue-500',
+  python: 'text-yellow-400',
+};
+
+// ✅ Tiny helper: safely render an icon by key
+function TechIcon({ iconKey, className = '' }) {
+  const Icon = ICON_MAP[iconKey];
+  if (!Icon) return null;
+
+  const colorClass = ICON_COLORS[iconKey] ?? 'text-muted-foreground';
+  return <Icon className={`${colorClass} ${className}`} aria-hidden='true' />;
+}
+
+// Helper function (time-sensitive)
 const calculateIfRecent = (dateString) => {
   if (!dateString) return false;
 
@@ -44,51 +90,40 @@ export default function DrawerPreview({
   released,
   status,
 }) {
-  // NEW: State to hold the result of the time-sensitive calculation.
-  // We initialize it to `false` (the server's default/safe assumption).
   const [isRecent, setIsRecent] = useState(false);
 
-  // 1. ESLint Fix: Defer the calculation, not just the flag setting.
-  // The effect now has a meaningful purpose: calculating a value based
-  // on a runtime variable (the current time).
+  // Only compute "recent" client-side (avoids Date-based SSR issues)
   useEffect(() => {
-    // Only run the time-sensitive check on the client
     setIsRecent(calculateIfRecent(released));
+  }, [released]);
 
-    // ESLint is now happy because the purpose of the effect is to sync
-    // the state (`isRecent`) with an external/runtime value (current time).
-  }, [released]); // Recalculate if the released date prop changes
+  // Avoid recomputing split/join every render
+  const truncatedDescription = useMemo(() => {
+    const words = (description || '').split(' ');
+    const short = words.slice(0, 20).join(' ');
+    return short + (words.length > 20 ? '...' : '');
+  }, [description]);
 
-  // Truncate the description for the card view
-  const truncatedDescription =
-    description.split(' ').slice(0, 20).join(' ') +
-    (description.split(' ').length > 20 ? '...' : '');
-
-  // Limit the number of icons shown on the card
-  const previewIcons = icons.slice(0, 5); // Show first 5 icons for preview
+  const previewIcons = icons.slice(0, 5);
 
   return (
     <Drawer>
       <DrawerTrigger asChild>
         <div
           role='button'
-          tabIndex={0} // Makes the div focusable like a button
-          className='
-            group w-full block text-left focus:outline-none 
-            rounded-xl border bg-card shadow-lg hover:shadow-xl 
-            transition-all duration-300 overflow-hidden cursor-pointer
-          '
+          tabIndex={0}
+          // ✅ FIX: no multi-line className strings (prevents \r\n hydration mismatch)
+          className='group w-full block text-left focus:outline-none rounded-xl border bg-card shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer'
           aria-label={`Open details for ${name}`}
         >
-          {/* 1. Image Area (Corrected Aspect Ratio) */}
+          {/* 1. Image Area */}
           <div
             className={`relative w-full overflow-hidden ${IMAGE_ASPECT_RATIO_CLASS}`}
           >
-            {/* Badges - uses the state `isRecent` */}
+            {/* Badges */}
             {status === 'working' ? (
               <ProgressBadge label='In Progress' />
             ) : null}
-            {/* Renders 'New' only after client-side calculation */}
             {isRecent && status !== 'working' ? (
               <ProgressBadge label='New' />
             ) : null}
@@ -98,27 +133,20 @@ export default function DrawerPreview({
               alt={name}
               fill
               sizes={IMAGE_SIZES}
-              className='
-                object-cover transition-transform duration-500 
-                group-hover:scale-[1.05]
-              '
+              // ✅ FIX: single-line className
+              className='object-cover transition-transform duration-500 group-hover:scale-[1.05]'
             />
 
-            {/* Subtle overlay for a premium look */}
-            <div
-              className='pointer-events-none absolute inset-0 
-              bg-linear-to-t from-black/20 to-transparent'
-            />
+            {/* ✅ FIX: single-line className */}
+            <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 to-transparent' />
           </div>
 
-          {/* 2. Text and Icon Content Area */}
+          {/* 2. Text + icon preview */}
           <div className='p-4'>
-            {/* Project Name */}
             <h3 className='text-xl font-semibold text-foreground mb-1 line-clamp-1'>
               {name}
             </h3>
 
-            {/* Description Preview */}
             <p className='text-sm text-muted-foreground line-clamp-2'>
               {truncatedDescription}
             </p>
@@ -126,33 +154,30 @@ export default function DrawerPreview({
             {/* Tech icons preview */}
             {icons?.length ? (
               <div className='mt-3 flex flex-row flex-wrap gap-2'>
-                {previewIcons.map((icon, index) => (
-                  <Image
+                {previewIcons.map((iconKey, index) => (
+                  <TechIcon
                     key={`${name}-preview-icon-${index}`}
-                    src={icon}
-                    alt='Tech icon'
-                    width={20}
-                    height={20}
-                    className='opacity-80'
+                    iconKey={iconKey}
+                    className='h-5 w-5 opacity-90'
                   />
                 ))}
-                {icons.length > previewIcons.length && (
+
+                {icons.length > previewIcons.length ? (
                   <span className='text-xs text-muted-foreground self-center'>
                     +{icons.length - previewIcons.length} more
                   </span>
-                )}
+                ) : null}
               </div>
             ) : null}
           </div>
         </div>
       </DrawerTrigger>
 
-      {/* Drawer Content remains mostly the same */}
+      {/* Drawer Content */}
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>{name}</DrawerTitle>
 
-          {/* DrawerDescription renders a <p>, so we use asChild to avoid nesting issues */}
           <DrawerDescription asChild>
             <div className='my-2 text-sm text-zinc-700 leading-relaxed'>
               {description}
@@ -161,21 +186,17 @@ export default function DrawerPreview({
         </DrawerHeader>
 
         <DrawerFooter>
-          {/* Tech icons - full list */}
+          {/* Tech icons full list */}
           {icons?.length ? (
             <div className='my-2 flex flex-row flex-wrap justify-center gap-2'>
-              {icons.map((icon, index) => (
+              {icons.map((iconKey, index) => (
                 <div
                   key={`${name}-icon-${index}`}
-                  className='rounded-lg border bg-background p-2 shadow-sm'
+                  // ✅ FIX: single-line className
+                  className='rounded-lg border bg-background p-2 shadow-sm transition-transform duration-200 hover:scale-105'
+                  title={iconKey}
                 >
-                  <Image
-                    src={icon}
-                    alt='Tech icon'
-                    width={28}
-                    height={28}
-                    className='opacity-90'
-                  />
+                  <TechIcon iconKey={iconKey} className='h-7 w-7 opacity-95' />
                 </div>
               ))}
             </div>
@@ -184,7 +205,8 @@ export default function DrawerPreview({
           {/* Link button */}
           <Link href={url} target='_blank' className='mt-6 flex justify-center'>
             <Button className='gap-2'>
-              リンク <FaCircleArrowRight />
+              Link
+              <FaCircleArrowRight />
             </Button>
           </Link>
 

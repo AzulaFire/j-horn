@@ -1,164 +1,164 @@
 @import 'tailwindcss';
 
-/* 1. Define the Custom Variant for Dark Mode */
 @custom-variant dark (&:is(.dark *));
 
-/* 2. Map Tailwind Utilities to CSS Variables (No Change Needed Here) */
 @theme {
-  /* Colors */
+  /* Colors - Mapping to your HSL variables */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
-
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Fonts */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Custom Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-float: float 3s ease-in-out infinite;
 
-  /* Radii */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 }
 
-/* 3. Define the Color Palette (MINIMALIST CHARCOAL & CYAN) */
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem; /* Slightly rounder for a modern feel */
 
-  /* --- LIGHT MODE: Crisp White & Charcoal --- */
-
-  /* Background: Pure White */
+  /* --- LIGHT MODE: Studio White & Electric Blue --- */
   --background: hsl(0 0% 100%);
+  --foreground: hsl(224 71% 4%);
 
-  /* Foreground: Deep Charcoal Gray */
-  --foreground: hsl(220 10% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(224 71% 4%);
 
-  /* Cards: Slightly off-white for subtle distinction */
-  --card: hsl(0 0% 98%);
-  --card-foreground: hsl(220 10% 10%);
+  --primary: hsl(221 83% 53%); /* Brighter Electric Blue */
+  --primary-foreground: hsl(210 40% 98%);
 
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(220 10% 10%);
+  --secondary: hsl(210 40% 96%);
+  --secondary-foreground: hsl(222 47% 11%);
 
-  /* Primary: Vibrant Cyan/Aqua accent for links, buttons */
-  --primary: hsl(32, 100%, 50%);
-  /* Primary Foreground: Pure White for high contrast on the Cyan accent */
-  --primary-foreground: hsl(0 0% 100%);
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215 16% 47%);
 
-  /* Secondary/Muted: Light Gray */
-  --secondary: hsl(220 10% 92%);
-  --secondary-foreground: hsl(220 5% 40%);
+  --accent: hsl(210 40% 96%);
+  --accent-foreground: hsl(222 47% 11%);
 
-  --muted: hsl(220 10% 92%);
-  --muted-foreground: hsl(220 5% 40%);
-
-  --accent: hsl(220 10% 92%);
-  --accent-foreground: hsl(220 10% 10%);
-
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(0 0% 100%);
-
-  /* Border/Input: Light, crisp gray */
-  --border: hsl(220 10% 88%);
-  --input: hsl(220 10% 88%);
-
-  --ring: hsl(190 90% 50%); /* Cyan ring */
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(221 83% 53%);
 }
 
 .dark {
-  /* --- DARK MODE: Deep Charcoal & Electric Cyan --- */
+  /* --- DARK MODE: Deep Charcoal & Cyan --- */
+  --background: hsl(222 47% 4%); /* Deeper Navy/Charcoal */
+  --foreground: hsl(210 40% 98%);
 
-  /* Background: Deep Charcoal, near-black */
-  --background: hsl(220 10% 8%);
+  --card: hsl(222 47% 7%); /* Slightly lighter than background */
+  --card-foreground: hsl(210 40% 98%);
 
-  /* Foreground: Soft, bright white */
-  --foreground: hsl(0 0% 95%);
+  --primary: hsl(191 91% 50%); /* High-energy Cyan */
+  --primary-foreground: hsl(222 47% 4%);
 
-  /* Card: A distinct Charcoal that pops from the background */
-  --card: hsl(220 10% 12%);
-  --card-foreground: hsl(0 0% 95%);
+  --secondary: hsl(217 32% 12%);
+  --secondary-foreground: hsl(210 40% 98%);
 
-  --popover: hsl(220 10% 8%);
-  --popover-foreground: hsl(0 0% 95%);
+  --muted: hsl(217 32% 12%);
+  --muted-foreground: hsl(215 20% 70%);
 
-  /* Primary: Vibrant Cyan/Aqua accent for links, buttons */
-  --primary: hsl(57, 95%, 55%);
-  /* Primary Foreground: Deep Charcoal for high contrast on the Cyan accent */
-  --primary-foreground: hsl(220 10% 10%);
+  --accent: hsl(217 32% 12%);
+  --accent-foreground: hsl(210 40% 98%);
 
-  /* Secondary/Muted: Mid-Dark Gray */
-  --secondary: hsl(220 10% 20%);
-  --secondary-foreground: hsl(220 5% 60%);
-
-  --muted: hsl(220 10% 20%);
-  --muted-foreground: hsl(220 5% 60%);
-
-  --accent: hsl(220 10% 20%);
-  --accent-foreground: hsl(0 0% 95%);
-
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(0 0% 95%);
-
-  /* Border/Input: Mid-Dark Gray to define elements */
-  --border: hsl(220 10% 25%);
-  --input: hsl(220 10% 25%);
-
-  --ring: hsl(61, 90%, 65%); /* Cyan ring */
+  --border: hsl(217 32% 20%);
+  --input: hsl(217 32% 20%);
+  --ring: hsl(191 91% 50%);
 }
 
-/* 4. Base Styles (No Change Needed Here) */
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border transition-colors duration-200;
+    button:not([disabled]),
+    [role='button']:not([disabled]) {
+      cursor: pointer;
+    }
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased selection:bg-primary/30;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
   }
-  button:not([disabled]),
-  [role='button']:not([disabled]) {
-    cursor: pointer;
+
+  /* Refined Typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight text-balance;
   }
 }
 
-/* 5. Modern Skill Progress Gradient (Updated to match Charcoal/Cyan theme) */
-.skill-progress [data-state='indeterminate'],
-.skill-progress [data-state='complete'],
-.skill-progress > div {
-  background: linear-gradient(
-    90deg,
-    /* Cyan Start */ hsl(32, 100%, 50%) 30%,
-    /* Violet/Purple End for depth */ hsl(57, 95%, 55%) 100%
-  );
-  /* Use a subtle glow matching the Cyan */
-  box-shadow: 0 0 10px -2px hsl(190 90% 60% / 0.5);
+@layer components {
+  /* Glassmorphism utility */
+  .glass {
+    @apply bg-background/60 backdrop-blur-md border border-white/10;
+  }
+
+  /* High-end Hover Effect */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  /* Cyan Glow Effect */
+  .glow-cyan {
+    box-shadow: 0 0 20px -5px var(--color-primary);
+  }
 }
 
-/* Animation classes are fine as they are */
+/* Custom Skill Bar Gradient */
+.skill-progress [data-state='complete'] {
+  background: linear-gradient(90deg, var(--color-primary) 0%, #a855f7 100%);
+}
+
+/* Animation for smooth page entries */
+.page-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes scroll {
   0% {
     transform: translateX(0);
@@ -169,7 +169,7 @@
 }
 
 .animate-scroll {
-  animation: scroll 30s linear infinite;
+  animation: scroll 80s linear infinite;
 }
 
 @keyframes marquee {
@@ -184,7 +184,7 @@
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 80s linear infinite;
+  animation: marquee 130s linear infinite;
 }
 
 .animate-marquee:hover {

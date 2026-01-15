@@ -19,7 +19,7 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Profile', href: '/profile' },
   { label: 'Projects', href: '/projects' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: '日本語', href: '/japanese' },
 ];
 
 export default function Header() {
